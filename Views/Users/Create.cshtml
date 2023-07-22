@@ -7,10 +7,10 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>User</h4>
         <hr />
@@ -49,7 +49,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="button" value="Create" class="btn btn-default" onclick="add()" />
             </div>
         </div>
     </div>
@@ -59,6 +59,30 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-@section Scripts {
+@section scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery.signalR-2.4.3.js"></script>
+    <script>
+
+        $(function () {
+            var con = $.hubConnection();
+
+            prox = con.createHubProxy("user");
+
+            con.start();
+
+        })
+
+        function add() {
+            var obj = {
+                "Name": $("#Name").val(),
+                "Email": $("#Email").val(),
+                "Password": $("#Password").val(),
+                "Age": $("#Age").val(),
+            };
+            prox.invoke("create", obj);
+
+        }
+
+    </script>
 }
